@@ -1,4 +1,6 @@
 # environment variables
 .env
 
-_pycache__/
+jobportal/_pycache__/
+
+*.pyc
