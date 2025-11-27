@@ -1,0 +1,89 @@
+{% extends "core/base.html" %}
+{% block content %}
+
+<div class="flex justify-center mt-10">
+    <div class="card w-full max-w-md shadow-xl bg-base-100 p-8 rounded-lg">
+
+        <h2 class="text-3xl font-semibold text-center mb-6">Candidate Signup</h2>
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-error mb-4">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div>
+                <label class="label"><span class="label-text">Username</span></label>
+                <input 
+                    type="text"
+                    name="username"
+                    value="{{ form.username.value|default:'' }}"
+                    class="input input-bordered w-full"
+                    placeholder="Enter your username"
+                />
+                {% if form.username.errors %}
+                    <p class="text-error text-sm">{{ form.username.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="label"><span class="label-text">Email</span></label>
+                <input 
+                    type="email"
+                    name="email"
+                    value="{{ form.email.value|default:'' }}"
+                    class="input input-bordered w-full"
+                    placeholder="you@example.com"
+                />
+                {% if form.email.errors %}
+                    <p class="text-error text-sm">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="label"><span class="label-text">Password</span></label>
+                <input 
+                    type="password"
+                    name="password1"
+                    class="input input-bordered w-full"
+                    placeholder="Enter password"
+                />
+                {% if form.password1.errors %}
+                    <p class="text-error text-sm">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label class="label"><span class="label-text">Confirm Password</span></label>
+                <input 
+                    type="password"
+                    name="password2"
+                    class="input input-bordered w-full"
+                    placeholder="Confirm password"
+                />
+                {% if form.password2.errors %}
+                    <p class="text-error text-sm">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <button class="btn btn-primary w-full mt-2">Create Account</button>
+
+            <p class="text-center mt-4">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="link link-primary">Login</a>
+            </p>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

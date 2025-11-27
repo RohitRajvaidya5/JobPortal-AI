@@ -7,15 +7,20 @@ User = settings.AUTH_USER_MODEL
 
 from django.apps import apps
 
-@receiver(post_save)
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    # Only run for your custom User class
-    UserModel = apps.get_model(settings.AUTH_USER_MODEL)
-    if sender is not UserModel:
+    if not created:
         return
-    if created:
-        if instance.role == UserModel.CANDIDATE:
-            CandidateProfile.objects.create(user=instance)
-        elif instance.role == UserModel.RECRUITER:
-            RecruiterProfile.objects.create(user=instance)
-        # Admin role can be handled by is_staff / is_superuser
+
+    # Skip superuser
+    if instance.is_superuser or instance.is_staff:
+        return
+
+    # Create recruiter profile
+    if instance.role == User.RECRUITER:
+        RecruiterProfile.objects.create(user=instance)
+
+    # Create candidate profile
+    elif instance.role == User.CANDIDATE:
+        CandidateProfile.objects.create(user=instance)
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html data-theme="night">
+  <head>
+    <title>Job Portal</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.6.0/dist/full.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body>
+
+    <!-- NAVBAR -->
+    <div class="navbar bg-neutral text-neutral-content px-4 mb-6">
+      <!-- Left -->
+      <div class="flex-1">
+        <a href="{% url 'home' %}" class="text-xl font-bold btn btn-ghost">
+          AI Job Portal
+        </a>
+      </div>
+
+      <!-- Right -->
+      <div class="flex-none flex items-center gap-2">
+
+        {% if user.is_authenticated %}
+
+          <span>Hi {{ user.username }} ({{ user.role }})</span>
+          <a href="{% url 'logout' %}" class="btn btn-error btn-sm">
+            Logout
+          </a>
+
+        {% else %}
+
+          {% url 'login' as login_url %}
+          <a
+            href="{{ login_url }}"
+            class="btn btn-sm {% if request.path == login_url %}btn-primary{% endif %} "
+          >
+            Login
+          </a>
+
+          {% url 'candidate_signup' as candidate_url %}
+          <a
+            href="{{ candidate_url }}"
+            class="btn btn-sm {% if request.path == candidate_url %}btn-primary{% endif %}"
+          >
+            Candidate Signup
+          </a>
+
+          {% url 'recruiter_signup' as recruiter_url %}
+          <a
+            href="{{ recruiter_url }}"
+            class="btn btn-sm {% if request.path == recruiter_url %}btn-primary{% endif %}"
+          >
+            Recruiter Signup
+          </a>
+
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container mx-auto">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+  </body>
+</html>
