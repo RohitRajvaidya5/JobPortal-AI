@@ -3,6 +3,29 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CandidateSignupForm, RecruiterSignupForm
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .utils import recruiter_required, candidate_required
+
+@login_required
+@recruiter_required
+def recruiter_dashboard(request):
+    return render(request, "core/recruiter_dashboard.html")
+
+
+@login_required
+@candidate_required
+def candidate_dashboard(request):
+    return render(request, "core/candidate_dashboard.html")
+
+@login_required
+def redirect_after_login(request):
+    if request.user.role == "candidate":
+        return redirect("candidate_dashboard")
+    elif request.user.role == "recruiter":
+        return redirect("recruiter_dashboard")
+    return redirect("login")
+
 
 def home(request):
     return render(request, "core/home.html")
@@ -36,7 +59,13 @@ def login_view(request):
     if request.method == 'POST' and form.is_valid():
         user = form.get_user()
         login(request, user)
-        return redirect('home')
+
+        if user.role == "candidate":
+            return redirect('candidate_dashboard')
+        elif user.role == "recruiter":
+            return redirect('recruiter_dashboard')
+        else:
+            return redirect('home')
     else:
         form = AuthenticationForm()
     return render(request, "core/login.html", {"form": form})

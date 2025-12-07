@@ -1,0 +1,76 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="p-6 space-y-6">
+
+    <h1 class="text-3xl font-bold">Recruiter Dashboard</h1>
+    <p class="text-lg text-gray-600">
+        Welcome {{ user.username }}
+        <span class="badge badge-secondary badge-lg ml-2">Recruiter</span>
+    </p>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="stat bg-base-200 rounded-xl">
+            <div class="stat-title">Total Job Posts</div>
+            <div class="stat-value text-primary">5</div>
+            <div class="stat-desc">Active postings</div>
+        </div>
+
+        <div class="stat bg-base-200 rounded-xl">
+            <div class="stat-title">New Applicants</div>
+            <div class="stat-value text-success">18</div>
+            <div class="stat-desc">Last 7 days</div>
+        </div>
+
+        <div class="stat bg-base-200 rounded-xl">
+            <div class="stat-title">Interviews Scheduled</div>
+            <div class="stat-value text-info">4</div>
+            <div class="stat-desc">Upcoming interviews</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-base-200 p-6 rounded-xl space-y-4">
+        <h2 class="text-xl font-semibold">Quick Actions</h2>
+
+        <div class="flex flex-wrap gap-4">
+            <a href="#" class="btn btn-primary">Post New Job</a>
+            <a href="#" class="btn btn-secondary">Manage Job Posts</a>
+            <a href="#" class="btn btn-accent">View Applicants</a>
+        </div>
+    </div>
+
+    <!-- Recent Job Postings -->
+    <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Recent Job Postings</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Example Job Card -->
+            <div class="card bg-base-200 shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title">Backend Developer</h3>
+                    <p class="text-gray-600">12 Applicants</p>
+                    <p class="badge badge-info badge-outline mt-2">Active</p>
+                    <div class="card-actions justify-end mt-4">
+                        <a href="#" class="btn btn-primary btn-sm">View Applicants</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-base-200 shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title">QA Automation Engineer</h3>
+                    <p class="text-gray-600">7 Applicants</p>
+                    <p class="badge badge-warning badge-outline mt-2">Closing Soon</p>
+                    <div class="card-actions justify-end mt-4">
+                        <a href="#" class="btn btn-primary btn-sm">View Applicants</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

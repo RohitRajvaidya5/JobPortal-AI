@@ -73,17 +73,34 @@ WSGI_APPLICATION = 'jobportal.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+#
+# This block allows switching between SQLite and Postgres using the
+# `DATABASE` environment variable. Supported values: 'sqlite' (default),
+# 'postgres' / 'postgresql'. For Postgres the following env vars are used
+# (with sensible fallbacks): `POSTGRES_DB`, `POSTGRES_USER`,
+# `POSTGRES_PASSWORD` (or `DB_PASSWORD`), `POSTGRES_HOST`, `POSTGRES_PORT`.
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jobportal',
-        'USER': 'postgres',
-        'PASSWORD': f'{os.getenv("DB_PASSWORD")}',
-        'HOST': 'localhost',
-        'PORT': '5432',
+# Read desired database type from env (defaults to sqlite)
+DATABASE_TYPE = os.getenv('DATABASE', 'sqlite').strip().lower()
+
+if DATABASE_TYPE in ('postgres', 'postgresql', 'psql'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB', os.getenv('DB_NAME', 'jobportal')),
+            'USER': os.getenv('POSTGRES_USER', os.getenv('DB_USER', 'postgres')),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD', os.getenv('DB_PASSWORD', '')),
+            'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / os.getenv('SQLITE_NAME', 'db.sqlite3'),
+        }
+    }
 
 
 
@@ -147,6 +164,4 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-
-# for now
-# jobportal_admin = job@12345
+LOGIN_REDIRECT_URL = "redirect_after_login"

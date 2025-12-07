@@ -1,11 +1,11 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from .models import CandidateProfile, RecruiterProfile
 
-User = settings.AUTH_USER_MODEL
+User = get_user_model()
 
-from django.apps import apps
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -17,10 +17,15 @@ def create_user_profile(sender, instance, created, **kwargs):
         return
 
     # Create recruiter profile
-    if instance.role == User.RECRUITER:
-        RecruiterProfile.objects.create(user=instance)
+    try:
+        if instance.role == User.RECRUITER:
+            RecruiterProfile.objects.create(user=instance)
 
-    # Create candidate profile
-    elif instance.role == User.CANDIDATE:
-        CandidateProfile.objects.create(user=instance)
+        # Create candidate profile
+        elif instance.role == User.CANDIDATE:
+            CandidateProfile.objects.create(user=instance)
+    except AttributeError:
+        # In case role or class constants aren't present, skip silently
+        # (prevents errors during migrations or when using a different user model)
+        return
 
