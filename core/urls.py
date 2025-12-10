@@ -10,4 +10,6 @@ urlpatterns = [
      path("redirect/", views.redirect_after_login, name="redirect_after_login"),
     path("candidate/dashboard/", views.candidate_dashboard, name="candidate_dashboard"),
     path("recruiter/dashboard/", views.recruiter_dashboard, name="recruiter_dashboard"),
+    path("upload_resume/", views.upload_resume, name="upload_resume"),
+    path("resume/<int:pk>/delete/", views.delete_resume, name="delete_resume"),
 ]

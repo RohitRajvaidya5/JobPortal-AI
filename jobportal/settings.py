@@ -165,3 +165,6 @@ SIMPLE_JWT = {
 }
 
 LOGIN_REDIRECT_URL = "redirect_after_login"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

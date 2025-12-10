@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
   <head>
     <title>Job Portal</title>
 
@@ -24,9 +24,35 @@
       <!-- Right -->
       <div class="flex-none flex items-center gap-2">
 
+        <!-- Theme Select -->
+        <select id="themeSelect" class="select select-bordered select-sm w-32" onchange="setTheme(this.value)">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="cupcake">Cupcake</option>
+          <option value="bumblebee">Bumblebee</option>
+          <option value="emerald">Emerald</option>
+          <option value="corporate">Corporate</option>
+          <option value="synthwave">Synthwave</option>
+          <option value="retro">Retro</option>
+          <option value="cyberpunk">Cyberpunk</option>
+          <option value="valentine">Valentine</option>
+          <option value="halloween">Halloween</option>
+          <option value="aqua">Aqua</option>
+        </select>
+
         {% if user.is_authenticated %}
 
-          <span>Hi {{ user.username }} ({{ user.role }})</span>
+          <span>
+            Hi
+            {% if user.role == 'candidate' %}
+              {{ user.candidate_profile.name }} {{ user.candidate_profile.surname }}
+            {% elif user.role == 'recruiter' %}
+              {{ user.recruiter_profile.name }} {{ user.recruiter_profile.surname }}
+            {% else %}
+              {{ user.username }}
+            {% endif %}
+            ({{ user.role }})
+          </span>
           <a href="{% url 'logout' %}" class="btn btn-error btn-sm">
             Logout
           </a>
@@ -67,6 +93,26 @@
       {% block content %}
       {% endblock %}
     </div>
+
+    <script>
+      // Load saved theme from localStorage or default to 'light'
+      function initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('themeSelect').value = savedTheme;
+      }
+
+      // Set theme and save to localStorage
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        document.getElementById('themeSelect').value = theme;
+      }
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', initTheme);
+      initTheme();
+    </script>
 
   </body>
 </html>

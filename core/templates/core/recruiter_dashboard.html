@@ -4,7 +4,15 @@
 
     <h1 class="text-3xl font-bold">Recruiter Dashboard</h1>
     <p class="text-lg text-gray-600">
-        Welcome {{ user.username }}
+        Welcome
+        {% if recruiter_profile.name or recruiter_profile.surname %}
+            {{ recruiter_profile.name }} {{ recruiter_profile.surname }}
+        {% else %}
+            {{ user.username }}
+        {% endif %}
+        {% if recruiter_profile.company_name %}
+            <span class="text-sm text-gray-500 ml-2">— {{ recruiter_profile.company_name }}</span>
+        {% endif %}
         <span class="badge badge-secondary badge-lg ml-2">Recruiter</span>
     </p>
 

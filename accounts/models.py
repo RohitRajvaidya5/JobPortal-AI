@@ -34,6 +34,8 @@ class User(AbstractUser):
 
 class CandidateProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='candidate_profile')
+    name = models.CharField(max_length=150, blank=True)
+    surname = models.CharField(max_length=150, blank=True)
     headline = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=128, blank=True)
     bio = models.TextField(blank=True)
@@ -45,6 +47,8 @@ class CandidateProfile(models.Model):
 
 class RecruiterProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='recruiter_profile')
+    name = models.CharField(max_length=150, blank=True)
+    surname = models.CharField(max_length=150, blank=True)
     company_name = models.CharField(max_length=255, blank=True)
     title = models.CharField(max_length=128, blank=True)
     website = models.URLField(blank=True)

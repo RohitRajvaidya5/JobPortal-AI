@@ -1,84 +1,64 @@
 {% extends "core/base.html" %}
 {% block content %}
-<div class="p-6 space-y-6">
 
-    <h1 class="text-3xl font-bold">Candidate Dashboard</h1>
-    <p class="text-lg text-gray-600">
-        Welcome {{ user.username }} 
-        <span class="badge badge-primary badge-lg ml-2">Candidate</span>
-    </p>
+<div class="p-6 space-y-8">
 
-    <!-- Stats Section -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="stat bg-base-200 rounded-xl">
-            <div class="stat-title">Applied Jobs</div>
-            <div class="stat-value text-primary">12</div>
-            <div class="stat-desc">You applied this month</div>
-        </div>
-
-        <div class="stat bg-base-200 rounded-xl">
-            <div class="stat-title">Shortlisted</div>
-            <div class="stat-value text-success">3</div>
-            <div class="stat-desc">Recruiters viewed your profile</div>
-        </div>
-
-        <div class="stat bg-base-200 rounded-xl">
-            <div class="stat-title">Interviews</div>
-            <div class="stat-value text-info">1</div>
-            <div class="stat-desc">Scheduled this week</div>
-        </div>
+    <!-- Header -->
+    <div>
+        <h1 class="text-3xl font-bold">Candidate Dashboard</h1>
+        <p class="text-lg text-gray-600">Welcome
+            {% if candidate_profile.name or candidate_profile.surname %}
+                {{ candidate_profile.name }} {{ candidate_profile.surname }}
+            {% else %}
+                {{ user.username }}
+            {% endif %}
+            <span class="badge badge-primary badge-lg ml-2">Candidate</span>
+        </p>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="bg-base-200 p-6 rounded-xl space-y-4">
+    <!-- Quick Actions (functional links only) -->
+    <div class="bg-base-200 p-6 rounded-xl">
         <h2 class="text-xl font-semibold">Quick Actions</h2>
-        <div class="flex flex-wrap gap-4">
-
-            <a href="#" class="btn btn-primary">
-                Browse Jobs
-            </a>
-
-            <a href="#" class="btn btn-secondary">
-                Update Resume
-            </a>
-
-            <a href="#" class="btn btn-accent">
-                View Applications
-            </a>
-
+        <div class="flex flex-wrap gap-4 mt-3">
+            <a href="{% url 'home' %}" class="btn btn-primary">Browse Jobs</a>
+            <a href="{% url 'upload_resume' %}" class="btn btn-secondary">Upload Resume</a>
         </div>
     </div>
 
-    <!-- Recommended Jobs -->
-    <div class="space-y-4">
-        <h2 class="text-xl font-semibold">Recommended Jobs</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Resume List (functional) -->
+    <div class="bg-base-200 p-6 rounded-xl">
+        <h2 class="text-xl font-semibold">Your Resumes</h2>
 
-            <!-- Example job card -->
-            <div class="card bg-base-200 shadow-lg">
-                <div class="card-body">
-                    <h3 class="card-title">Frontend Developer</h3>
-                    <p class="text-gray-600">TechCorp Pvt Ltd</p>
-                    <p class="badge badge-info badge-outline mt-2">Remote</p>
-                    <div class="card-actions justify-end mt-4">
-                        <a class="btn btn-primary btn-sm">View</a>
-                    </div>
-                </div>
-            </div>
+        {% if resumes %}
+            <ul class="space-y-3 mt-3">
+                {% for resume in resumes %}
+                    <li class="flex items-center justify-between bg-base-100 p-4 rounded-xl shadow">
+                        <div>
+                            {% if resume.file.url %}
+                                <a href="{{ resume.file.url }}" target="_blank" class="font-medium text-primary">
+                                    {{ resume.file.name|slice:"8:" }}
+                                </a>
+                            {% else %}
+                                <span class="font-medium">{{ resume.file.name|default:"Resume" }}</span>
+                            {% endif %}
+                            <p class="text-sm text-gray-500">Uploaded: {{ resume.uploaded_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="badge badge-outline badge-info">PDF</span>
 
-            <div class="card bg-base-200 shadow-lg">
-                <div class="card-body">
-                    <h3 class="card-title">Python Backend Engineer</h3>
-                    <p class="text-gray-600">Innovate Labs</p>
-                    <p class="badge badge-success badge-outline mt-2">Full Time</p>
-                    <div class="card-actions justify-end mt-4">
-                        <a class="btn btn-primary btn-sm">View</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+                            <form method="post" action="{% url 'delete_resume' resume.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-error btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 mt-3">No resumes uploaded yet.</p>
+        {% endif %}
     </div>
 
 </div>
+
 {% endblock %}
