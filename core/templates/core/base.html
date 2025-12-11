@@ -24,21 +24,26 @@
       <!-- Right -->
       <div class="flex-none flex items-center gap-2">
 
-        <!-- Theme Select -->
-        <select id="themeSelect" class="select select-bordered select-sm w-32" onchange="setTheme(this.value)">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="cupcake">Cupcake</option>
-          <option value="bumblebee">Bumblebee</option>
-          <option value="emerald">Emerald</option>
-          <option value="corporate">Corporate</option>
-          <option value="synthwave">Synthwave</option>
-          <option value="retro">Retro</option>
-          <option value="cyberpunk">Cyberpunk</option>
-          <option value="valentine">Valentine</option>
-          <option value="halloween">Halloween</option>
-          <option value="aqua">Aqua</option>
-        </select>
+        <!-- Light / Dark Toggle -->
+        <button id="themeToggle" class="btn btn-ghost btn-circle" title="Toggle theme" onclick="toggleTheme()">
+          <!-- Sun (visible in light) -->
+          <svg id="iconSun" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="M4.93 4.93l1.41 1.41"></path>
+            <path d="M17.66 17.66l1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="M4.93 19.07l1.41-1.41"></path>
+            <path d="M17.66 6.34l1.41-1.41"></path>
+          </svg>
+
+          <!-- Moon (visible in dark) -->
+          <svg id="iconMoon" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+          </svg>
+        </button>
 
         {% if user.is_authenticated %}
 
@@ -95,21 +100,37 @@
     </div>
 
     <script>
-      // Load saved theme from localStorage or default to 'light'
+      // Initialize theme and icons
       function initTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        document.getElementById('themeSelect').value = savedTheme;
+        updateToggleIcon(savedTheme);
       }
 
-      // Set theme and save to localStorage
       function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
-        document.getElementById('themeSelect').value = theme;
+        updateToggleIcon(theme);
       }
 
-      // Initialize on page load
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        setTheme(current === 'light' ? 'dark' : 'light');
+      }
+
+      function updateToggleIcon(theme) {
+        const sun = document.getElementById('iconSun');
+        const moon = document.getElementById('iconMoon');
+        if (!sun || !moon) return;
+        if (theme === 'dark') {
+          sun.classList.add('hidden');
+          moon.classList.remove('hidden');
+        } else {
+          sun.classList.remove('hidden');
+          moon.classList.add('hidden');
+        }
+      }
+
       document.addEventListener('DOMContentLoaded', initTheme);
       initTheme();
     </script>
